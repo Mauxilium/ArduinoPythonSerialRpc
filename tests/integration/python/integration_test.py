@@ -158,7 +158,7 @@ def do_it():
     arduino = ArduinoRpc("COM5", 9600)
     arduino.connect()
 
-    card_name = arduino.get_cart_name()
+    card_name = arduino.get_card_name()
     if EXPECTED_SKETCH != card_name:
         print("Invalid card. Found \""+card_name+"\" instead of expected \""+EXPECTED_SKETCH+"\"")
         exit(-1)
