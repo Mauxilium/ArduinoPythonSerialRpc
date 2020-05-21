@@ -22,7 +22,7 @@ setup(
     author_email="gabriele.maris@mauxilium.it",
     license="Apache2",
     classifiers=[
-        "License :: OSI Approved :: Apache2",
+        "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.7",
     ],
     packages=["arduinopythonserialrpc"],
