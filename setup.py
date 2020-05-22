@@ -1,16 +1,14 @@
 """Setup script for ArduinoPythonSerialRpc"""
 
 import os.path
+
 from setuptools import setup
 
-# The directory containing this file
 HERE = os.path.abspath(os.path.dirname(__file__))
 
-# The text of the README file
 with open(os.path.join(HERE, "README.md")) as fid:
     README = fid.read()
 
-# This call to setup() does all the work
 setup(
     name="arduinopythonserialrpc",
     version="1.0.0",
