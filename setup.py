@@ -11,7 +11,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 
 setup(
     name="arduinopythonserialrpc",
-    version="1.0.0",
+    version="1.0.5",
     description="Python side of a serial communication library with Arduino Card",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,7 +23,7 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["arduinopythonserialrpc"],
+    packages=["arduinopythonserialrpc", "arduinopythonserialrpc.engine", "arduinopythonserialrpc.exception"],
     include_package_data=True,
     install_requires=[
         "pyserial", "pytest"

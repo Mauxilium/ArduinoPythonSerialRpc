@@ -12,10 +12,10 @@ def usb_handle_mock():
 
 
 def test_execute_void_ok(usb_handle_mock):
-    usb_handle_mock.execute_remote_action.return_value = None
+    usb_handle_mock.execute_remote_function.return_value = None
     result = ActionSelector.select_and_execute(usb_handle_mock, "fake_void_function")
 
-    usb_handle_mock.execute_remote_action.assert_called_with("fake_void_function")
+    usb_handle_mock.execute_remote_function.assert_called_with("fake_void_function")
     assert result is None
 
 

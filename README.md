@@ -25,7 +25,7 @@ Tbdf
 
 ## Arduino Side Installation
 It is required to:
- * download the Arduino library from: xyz
+ * download the Arduino library from: https://github.com/Mauxilium/ArduinoSerialRpc
  * expand it into your "library" path of Arduino Ide,
   or follows the manual installation section of https://www.arduino.cc/en/guide/libraries
   
@@ -36,65 +36,99 @@ pip install arduinopythonserialrpc
 ```c++
 #include <ArduinoSerialRpc.h>
 
-// Creating the rpc agent you are totally free to assign
-// your preferred name to the card
-ArduinoSerialRpc rpc("MyTestCard");
+ArduinoSerialRpc rpc("Arduino www.mauxilium.it");
 
 void setup() {
-  Serial.begin(9600); // or any other supported value
-
-  // Python can use "callIt" string to force the execution of myMethod function
-  rpc.registerArduinoAction("callIt", myMethod);
+  Serial.begin(9600);
+  rpc.registerArduinoFunction("go", startTest);
+  rpc.registerArduinoFunction("halt", stopTest);
 }
 
-void myMethod() {
-    // This method is called when the Java program
-    // executes an executeRemoteMethod("callIt"); 
+
+// ##########################################################################
+// BE AWARE!!!
+// DO NOT FORGET TO ADD THE FOLLOWING serialEvent() FUNCTION INTO YOUR SKETCH
+void serialEvent() {
+  rpc.serialEventHandler();
+}
+// ##########################################################################
+
+
+bool execFlag = false;
+int counter = 0;
+
+void startTest() {
+  execFlag = true;
+}
+
+void stopTest() {
+  counter = 0;
+  execFlag = false;
 }
 
 void loop() {
-    // Here Arduino calls a method of the external Java program.
-    // No registration is required
-    rpc.executeRemoteAction("pingFromArduino");
+  delay(200);
+  if (execFlag) {
+    rpc.executeRemoteMethod("ping_from_arduino", counter, counter++);
+  }
 }
+
 ```
 
 ## Python Class basic example
 A simplified version of Python test program could be:
 ```code
+from threading import Event
+from arduinopythonserialrpc.arduino_python_serial_rpc import ArduinoPythonSerialRpc
+
+
 class ArduinoRpc(ArduinoPythonSerialRpc):
     def __init__(self):
         super(ArduinoRpc, self).__init__("COM5", 9600, self)
 
-    def pingFromArduino(self):
-        print("Arduino calls it now")
+    def ping_from_arduino(self, arg1: int, arg2: int) -> int:
+        print("Ping: "+str(arg2))
+        if arg1 == 15:
+            test_arduino_to_pc_completed.set()
+        return arg2
+
+
+test_arduino_to_pc_completed = Event()
 
 if __name__ == "__main__":
-    ArduinoRpc rpc = new ArduinoRpc()
+    rpc = ArduinoRpc()
     rpc.connect()
-    rpc.executeRemoteAction("callIt")
+    card_name = rpc.get_card_name()
+    print("Connected to: " + card_name)
+
+    print("First cicle of 15 pings")
+    rpc.execute_remote_function("go")
+    test_arduino_to_pc_completed.wait()
+    rpc.execute_remote_function("halt")
+
+    print("Second cicle of 15 pings")
+    test_arduino_to_pc_completed.clear()
+    rpc.execute_remote_function("go")
+    test_arduino_to_pc_completed.wait()
+    rpc.execute_remote_function("halt")
+
+    print("Test ends")
     rpc.disconnect()
 ```
-You can find a real complete use case in the source path:
+You can find another real complete use case in the source path:
 * ArduinoPythonSerialRpc\tests\integration\sketch
 * ArduinoPythonSerialRpc\tests\integration\java
 
 ### Build and run 
-Python and Arduino communication is performed by the way of RxTx external library:
-```
-(from his readme)
-RXTX binary builds provided by Mfizz Inc. (http://mfizz.com/).
-Please see http://mfizz.com/oss/rxtx-for-java for more info.
-```
-A copy of 64Bit RxTx library is added to this git repository. 
+Python and Arduino communication is performed by the way of pyserial external library:
 
 In order to execute the integration example test, please follows this steps:
-* Open the sketch ArduinoJavaSerialRpc\src\test\java\integration\sketch\sketch.ino
+* Open the sketch ArduinoPythonSerialRpc\tests\integration\sketch\sketch.ino
 * Download it into your Arduino Card
-* Execute the following commands
+* Open a terminal and go to ArduinoPythonSerialRpc\tests\integration\python
+* Execute the following command
 ```bash
-mvn clean test
-java -Djava.library.path=RxTx\mfz-rxtx-2.2-20081207-win-x64 -cp target/test-classes;target/classes;RxTx/mfz-rxtx-2.2-20081207-win-x64/RXTXcomm.jar integration.java.IntegrationTest COM5 9600
+python integration_test.py
 ```
 
 ### Next steps

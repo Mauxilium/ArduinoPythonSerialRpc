@@ -28,7 +28,7 @@ class ArduinoRpc(ArduinoPythonSerialRpc):
             self.receiving_report += "intCallJavaSide called "+str(self.int_call_counter)+" times instead 3"
         return self.receiving_report
 
-    def string_call_pc_to_arduino(self, value: str) -> str:
+    def string_call_arduino_to_pc(self, value: str) -> str:
         '''
         Method called from Arduino
         :param value: a tests value sent from Arduino card
@@ -45,7 +45,7 @@ class ArduinoRpc(ArduinoPythonSerialRpc):
             print("\tstringCallArduinoToPc called with value: "+value+"; expected: "+expected_str)
         return "ok"
 
-    def float_call_pc_to_arduino(self, value: float) -> float:
+    def float_call_arduino_to_pc(self, value: float) -> float:
         '''
         Method called from Arduino
         :param value: a tests value sent from Arduino card
@@ -62,7 +62,7 @@ class ArduinoRpc(ArduinoPythonSerialRpc):
             print("\tfloatCallArduinoToPc called with value: "+str(value)+"; expected: "+str(expected_float))
         return float(1.0)
 
-    def int_call_pc_to_arduino(self, value1: int, value2: int) -> int:
+    def int_call_arduino_to_pc(self, value1: int, value2: int) -> int:
         '''
         Method called from Arduino
         :param value1: a tests value sent from Arduino card
@@ -109,17 +109,17 @@ def perform_python_to_arduino_test(arduino: ArduinoRpc):
 def send_execution(cicle: int, arduino: ArduinoRpc) -> str:
     print("\tExec " + STRING_CALL_FROM_PC_TO_ARDUINO + " with index: " + str(cicle))
     string_expected = str(cicle) + str(cicle) + str(cicle)
-    string_resp = arduino.execute_remote_action(STRING_CALL_FROM_PC_TO_ARDUINO, str(cicle))
+    string_resp = arduino.execute_remote_function(STRING_CALL_FROM_PC_TO_ARDUINO, str(cicle))
     print("\t\tResult: "+string_resp+"; Expected: "+string_expected)
 
     print("\tExec " + INTEGER_CALL_FROM_PC_TO_ARDUINO + " with index: " + str(cicle))
     int_expected = (cicle + 18) * cicle
-    int_resp = arduino.execute_remote_action(INTEGER_CALL_FROM_PC_TO_ARDUINO, cicle, cicle + 18)
+    int_resp = arduino.execute_remote_function(INTEGER_CALL_FROM_PC_TO_ARDUINO, cicle, cicle + 18)
     print("\t\tResult: " + str(int_resp)+"; Expected: "+str(int_expected))
 
     print("\tExec " + FLOAT_CALL_FROM_PC_TO_ARDUINO + " with index: " + str(cicle))
     float_expected = float(3.1 * cicle)
-    float_resp = arduino.execute_remote_action(FLOAT_CALL_FROM_PC_TO_ARDUINO, float(1.0 * cicle))
+    float_resp = arduino.execute_remote_function(FLOAT_CALL_FROM_PC_TO_ARDUINO, float(1.0 * cicle))
     print("\t\tResult: " + str(float_resp)+"; Expected: "+str(float_expected))
     print("")
 
@@ -165,11 +165,11 @@ def do_it():
     else:
         print("Connected to: "+card_name)
 
-    arduino.execute_remote_action("Start")
+    arduino.execute_remote_function("Start")
     perform_python_to_arduino_test(arduino)
-    arduino.execute_remote_action("Switch")
+    arduino.execute_remote_function("Switch")
     wait_receiving_test_completed(arduino)
-    arduino.execute_remote_action("Stop")
+    arduino.execute_remote_function("Stop")
     evaluate_test_result(arduino)
     arduino.disconnect()
 

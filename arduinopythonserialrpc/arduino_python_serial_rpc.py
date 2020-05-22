@@ -135,23 +135,23 @@ class ArduinoPythonSerialRpc:
         '''
         return self.usb_handler.get_card_name()
 
-    def execute_remote_action(self, action_name: str, arg1=None, arg2=None):
+    def execute_remote_function(self, action_name: str, arg1=None, arg2=None):
         '''
         Executes a function (of Arduino sketch) with signature selected by the not none arguments combination
-        :param action_name: he name of Arduino's function to call.
+        :param action_name: the name of Arduino's function to call.
         :param arg1: the optional first argument
         :param arg2: the optional second argument (must be None if arg1 is None)
         :return: the Arduino response if arg1 is not none; None otherwise
         '''
         return ActionSelector.select_and_execute(self.usb_handler, action_name, arg1, arg2)
 
-    def execute_local_action(self, action_name: str, arg1=None, arg2=None):
+    def execute_local_method(self, action_name: str, arg1=None, arg2=None):
         '''
-        Executes a function of local controller with signature selected by the not none arguments combination
-        :param action_name: the controller function to call
+        Executes a method of local controller with signature selected by the not none arguments combination
+        :param action_name: the controller method to call
         :param arg1: the optional first argument
         :param arg2: the optional second argument (must be None if arg1 is None)
-        :return: the function result
+        :return: the method result
         '''
         if arg2 is not None:
             return getattr(self.ctrl, action_name)(arg1, arg2)

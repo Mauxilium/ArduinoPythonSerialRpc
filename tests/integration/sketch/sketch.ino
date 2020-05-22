@@ -1,21 +1,21 @@
-#include <ArduinoRpc.h>
+#include <ArduinoSerialRpc.h>
 
 boolean testRunning = false;
 boolean sendingTestActive = false;
 int sendIndex = 0;
 
-ArduinoRpc rpc("Full Tutorial Sketch (www.mauxilium.it)");
+ArduinoSerialRpc rpc("Full Tutorial Sketch (www.mauxilium.it)");
 
 void setup() {
   Serial.begin(9600);
 
-  rpc.registerArduinoAction("Start", testStart);
-  rpc.registerArduinoAction("Switch", testSwitch);
-  rpc.registerArduinoAction("Stop", testStop);
+  rpc.registerArduinoFunction("Start", testStart);
+  rpc.registerArduinoFunction("Switch", testSwitch);
+  rpc.registerArduinoFunction("Stop", testStop);
 
-  rpc.registerArduinoAction("FloatCallPcToArduino", floatCall);
-  rpc.registerArduinoAction("StringCallPcToArduino", stringCall);
-  rpc.registerArduinoAction("IntCallPcToArduino", intCall);
+  rpc.registerArduinoFunction("FloatCallPcToArduino", floatCall);
+  rpc.registerArduinoFunction("StringCallPcToArduino", stringCall);
+  rpc.registerArduinoFunction("IntCallPcToArduino", intCall);
 }
 
 void serialEvent() {
@@ -55,11 +55,11 @@ void loop() {
   delay(10);
   if (sendingTestActive) {
     if (++sendIndex < 4) {
-      rpc.executeRemoteAction("string_call_pc_to_arduino", String(13*sendIndex));
-      rpc.executeRemoteAction("float_call_pc_to_arduino", 18.11*sendIndex);
-      rpc.executeRemoteAction("int_call_pc_to_arduino", sendIndex, 27*sendIndex);
+      rpc.executeRemoteMethod("string_call_arduino_to_pc", String(13*sendIndex));
+      rpc.executeRemoteMethod("float_call_arduino_to_pc", 18.11*sendIndex);
+      rpc.executeRemoteMethod("int_call_arduino_to_pc", sendIndex, 27*sendIndex);
     } else {
-      rpc.executeRemoteAction("arduino_ends");
+      rpc.executeRemoteMethod("arduino_ends");
       sendingTestActive = false;
     }
   }

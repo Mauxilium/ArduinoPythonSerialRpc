@@ -28,17 +28,17 @@ class ProtocolFromArduino:
         cmd_name = ProtocolFromArduino.get_token(serial)
         arg_type = ProtocolFromArduino.get_token(serial)
         if arg_type == VOID_ARG_PREAMBLE:
-            ctrl.execute_local_action(cmd_name)
+            ctrl.execute_local_method(cmd_name)
         elif arg_type == INT_INT_ARG_PREAMBLE:
             arg1 = int(ProtocolFromArduino.get_token(serial))
             arg2 = int(ProtocolFromArduino.get_token(serial))
-            ctrl.execute_local_action(cmd_name, arg1, arg2)
+            ctrl.execute_local_method(cmd_name, arg1, arg2)
         elif arg_type == STRING_ARG_PREAMBLE:
             arg = ProtocolFromArduino.get_token(serial)
-            ctrl.execute_local_action(cmd_name, arg)
+            ctrl.execute_local_method(cmd_name, arg)
         elif arg_type == FLOAT_ARG_PREAMBLE:
             arg = float(ProtocolFromArduino.get_token(serial))
-            ctrl.execute_local_action(cmd_name, arg)
+            ctrl.execute_local_method(cmd_name, arg)
         else:
             raise Exception("Not supported received argument model: " + str(arg_type[0]))
 
