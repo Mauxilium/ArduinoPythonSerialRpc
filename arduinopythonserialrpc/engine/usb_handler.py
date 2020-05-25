@@ -34,34 +34,34 @@ class UsbHandler:
         pass
 
     def get_card_name(self):
-        return self.execute_remote_action_str("GetCardName", "")
+        return self.execute_remote_function_str("GetCardName", "")
 
     def close(self):
         self.serial.close()
 
-    def execute_remote_action(self, action_name: str):
+    def execute_remote_function(self, function_name: str):
         self.calling_on_air.clear()
-        ProtocolToArduino.send_command(action_name, self.serial)
+        ProtocolToArduino.send_command(function_name, self.serial)
         self.calling_on_air.set()
         self.result_incoming.wait()  # Note: This wait must be executed in order to preserve the Events handshaking
 
-    def execute_remote_action_str(self, action_name: str, arg: str) -> str:
+    def execute_remote_function_str(self, function_name: str, arg: str) -> str:
         self.calling_on_air.clear()
-        ProtocolToArduino.send_command_str(action_name, arg, self.serial)
+        ProtocolToArduino.send_command_str(function_name, arg, self.serial)
         self.calling_on_air.set()
         self.result_incoming.wait()
         return str(self.result_of_call_value)
 
-    def execute_remote_action_int_int(self, action_name: str, arg1: int, arg2: int) -> int:
+    def execute_remote_function_int_int(self, function_name: str, arg1: int, arg2: int) -> int:
         self.calling_on_air.clear()
-        ProtocolToArduino.send_command_int_int(action_name, arg1, arg2, self.serial)
+        ProtocolToArduino.send_command_int_int(function_name, arg1, arg2, self.serial)
         self.calling_on_air.set()
         self.result_incoming.wait()
         return int(self.result_of_call_value)
 
-    def execute_remote_action_float(self, action_name: str, arg: float) -> float:
+    def execute_remote_function_float(self, function_name: str, arg: float) -> float:
         self.calling_on_air.clear()
-        ProtocolToArduino.send_command_float(action_name, arg, self.serial)
+        ProtocolToArduino.send_command_float(function_name, arg, self.serial)
         self.calling_on_air.set()
         self.result_incoming.wait()
         return float(self.result_of_call_value)

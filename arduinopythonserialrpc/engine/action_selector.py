@@ -23,7 +23,7 @@ class ActionSelector:
     def exec_three(usb_handler: UsbHandler, action_name: str, arg1, arg2) -> int:
         if isinstance(arg1, int):
             if isinstance(arg2, int):
-                return usb_handler.execute_remote_action_int_int(action_name, arg1, arg2)
+                return usb_handler.execute_remote_function_int_int(action_name, arg1, arg2)
             else:
                 raise LocalException("Error calling " + action_name + ": invalid second argument type. Found " +
                                      type(arg2).__name__ + " instead of int")
@@ -34,12 +34,12 @@ class ActionSelector:
     @staticmethod
     def exec_two(usb_handler: UsbHandler, action_name: str, arg1):
         if isinstance(arg1, str):
-            return usb_handler.execute_remote_action_str(action_name, arg1)
+            return usb_handler.execute_remote_function_str(action_name, arg1)
         elif isinstance(arg1, float):
-            return usb_handler.execute_remote_action_float(action_name, arg1)
+            return usb_handler.execute_remote_function_float(action_name, arg1)
         else:
             raise LocalException("Error calling "+action_name+": invalid argument type. Found "+type(arg1).__name__+" instead of str or float")
 
     @staticmethod
     def exec_one(usb_handler: UsbHandler, action_name: str):
-        return usb_handler.execute_remote_action(action_name)
+        return usb_handler.execute_remote_function(action_name)

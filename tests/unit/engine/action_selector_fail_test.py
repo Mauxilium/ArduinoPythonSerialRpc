@@ -1,10 +1,11 @@
 from unittest.mock import Mock
 
 import pytest
+from arduinopythonserialrpc.exception.local_exception import LocalException
+
+from arduinopythonserialrpc.engine.usb_handler import UsbHandler
 
 from arduinopythonserialrpc.engine.action_selector import ActionSelector
-from arduinopythonserialrpc.engine import UsbHandler
-from arduinopythonserialrpc.exception import LocalException
 
 EMPTY_ACTION_NAME_EXCEPTION = "Error: invalid empty action name"
 

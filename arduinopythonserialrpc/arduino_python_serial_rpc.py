@@ -43,44 +43,45 @@ class ArduinoPythonSerialRpc:
     of RPC (Remote Procedure Call) and RMI (Remote Method Invocation) through the serial port.
     Due to resource limitations of Arduino card, only a few fixed signatures are available.
 
-    Java to Arduino (RPC)
-        A Java program that includes ArduinoJavaSerialRpc can call a function inside an Arduino sketch if:
+    Python to Arduino (RPC)
+        A Python program that includes ArduinoPythonSerialRpc can call a function inside an Arduino sketch if:
             - The sketch includes the ArduinoSerialRpc library: "#include <ArduinoSerialRpc.h>"
-            - The sketch function is registered using the "registerArduinoAction" method.
-            - The registered function have one of the following signatures:
-                - void <i>methodName</i>();
-                - int <i>methodName</i>(int arg1, int arg2);
-                - float <i>methodName</i>(float arg);
-                - String <i>methodName</i>(String arg);
+            - The sketch function is registered using the "registerArduinoFunction" method.
+            - The sketch registered function have one of the following signatures:
+                - void methodName();
+                - int methodName(int arg1, int arg2);
+                - float methodName(float arg);
+                - String methodName(String arg);
 
         For example, a legal call could be:
-            libraryInstance.executeAction("writeAction", 1811, 1118);
+            library_instance = ArduinoRpc("COM5", 9600)
+            library_instance.connect()
+            library_instance.execute_remote_function("writeAction", 1811, 1118);
 
-    Arduino to Java (RMI)
-        An Arduino sketch can call a Java method without any registration, if:
+    Arduino to Python (RMI)
+        An Arduino sketch can call a Python method without any registration, if:
             - The sketch includes: "#include <ArduinoSerialRpc.h>".
-            - The required method is part of a class which extends ArduinoJavaSerialRpc.
+            - The required method is part of a class which extends ArduinoPythonSerialRpc.
             - The method signature is one of the following:
-                - void <i>methodName</i>();
-                - Integer <i>methodName</i>(Integer arg1, Integer arg2);
-                - Float <i>methodName</i>(Float arg);
-                - String <i>methodName</i>(String arg);
+                - method_name()
+                - method_name(arg1: int, arg2: int) -> int
+                - method_name(arg: float) -> float
+                - method_name(arg: str) -> str
 
+        For example, a legal sketch could be:
+            ArduinoSerialRpc rpc("My Arduino");
+            rpc.executeRemoteMethod("print_arduino_text", "Hello from Arduino");
     '''
 
     def __init__(self, port_name: str, baud_rate: int, ctrl):
         '''
         Creates a connector to Arduino card.
-        The constructor requires two parameter:
-        The port name, which syntax depends from the operating system in use.
-        The baud rate, which depends from the sketch setup().
-        Frequently used values are declared in the PORTs constants (like LINUX_DEFAULT_PORT) and DATA_RATE constants.
-
-        NOTE:
+        The constructor requires two parameters, frequently used values are declared in the PORTs constants
+        (like LINUX_DEFAULT_PORT) and DATA_RATE constants.
         This constructor instantiates the resource only, to establish a physical connection with the card a
         "connect()" invocation is required.
-        :param port_name: The name of connection port; i.e. "COM1"
-        :param baud_rate: The value for Serial port speed
+        :param port_name: The name of connection port; His syntax depends from the operating system in use.
+        :param baud_rate: The value for Serial port speed; His value must be the same of Serial.begin value in the sketch
         :param ctrl: The instance where the methods accessible from Arduino sketch are declared
         '''
         print("Powered by ArduinoPythonSerialRpc from www.mauxilium.it")
@@ -91,7 +92,7 @@ class ArduinoPythonSerialRpc:
     def connect(self):
         '''
         Creates a connection with the Arduino card.
-        After this calls the USB port is locked and no other programs can use it.
+        After this calls the USB port is locked and no other program can use it.
         In order to release the USB port a "disconnect()" call is required.
         '''
         serial = self.usb_handler.initialize()
@@ -135,15 +136,15 @@ class ArduinoPythonSerialRpc:
         '''
         return self.usb_handler.get_card_name()
 
-    def execute_remote_function(self, action_name: str, arg1=None, arg2=None):
+    def execute_remote_function(self, function_name: str, arg1=None, arg2=None):
         '''
         Executes a function (of Arduino sketch) with signature selected by the not none arguments combination
-        :param action_name: the name of Arduino's function to call.
+        :param function_name: the name of Arduino's function to call.
         :param arg1: the optional first argument
         :param arg2: the optional second argument (must be None if arg1 is None)
         :return: the Arduino response if arg1 is not none; None otherwise
         '''
-        return ActionSelector.select_and_execute(self.usb_handler, action_name, arg1, arg2)
+        return ActionSelector.select_and_execute(self.usb_handler, function_name, arg1, arg2)
 
     def execute_local_method(self, action_name: str, arg1=None, arg2=None):
         '''
