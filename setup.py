@@ -11,7 +11,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 
 setup(
     name="arduinopythonserialrpc",
-    version="1.0.5",
+    version="1.0.0",
     description="Python side of a serial communication library with Arduino Card",
     long_description=README,
     long_description_content_type="text/markdown",

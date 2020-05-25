@@ -115,17 +115,20 @@ if __name__ == "__main__":
     print("Test ends")
     rpc.disconnect()
 ```
-You can find another real complete use case in the source path:
+
+### Build and run
+Inside the GitHub repository:
+https://github.com/Mauxilium/ArduinoPythonSerialRpc
+
+You can find another real complete use case in the source paths:
 * ArduinoPythonSerialRpc\tests\integration\sketch
-* ArduinoPythonSerialRpc\tests\integration\java
-
-### Build and run 
-Python and Arduino communication is performed by the way of pyserial external library:
-
-In order to execute the integration example test, please follows this steps:
+* ArduinoPythonSerialRpc\tests\integration\python
+ 
+In order to execute this integration example test, please follow this steps:
 * Open the sketch ArduinoPythonSerialRpc\tests\integration\sketch\sketch.ino
 * Download it into your Arduino Card
 * Open a terminal and go to ArduinoPythonSerialRpc\tests\integration\python
+* Modify the port name on row 158 of integration_test.py according to your system 
 * Execute the following command
 ```bash
 python integration_test.py
