@@ -25,7 +25,7 @@ Tbdf
 
 ## Arduino Side Installation
 It is required to:
- * download the Arduino library from: https://github.com/Mauxilium/ArduinoSerialRpc
+ * download the Arduino library from: [ArduinoSerialRpc](https://github.com/Mauxilium/ArduinoSerialRpc)
  * expand it into your "library" path of Arduino Ide,
   or follows the manual installation section of https://www.arduino.cc/en/guide/libraries
   
@@ -117,8 +117,7 @@ if __name__ == "__main__":
 ```
 
 ### Build and run
-Inside the GitHub repository:
-https://github.com/Mauxilium/ArduinoPythonSerialRpc
+Inside the GitHub repository: [ArduinoPythonSerialRpc](https://github.com/Mauxilium/ArduinoPythonSerialRpc)
 
 You can find another real complete use case in the source paths:
 * ArduinoPythonSerialRpc\tests\integration\sketch
@@ -135,5 +134,5 @@ python integration_test.py
 ```
 
 ### Next steps
-* ArduinoPythonSerialRpc tutorial - A tutorial to discover a more complex use of library (On Working)
-* www.mauxilium.it - The reference site for my other projects (On Working)
+* [ArduinoPythonSerialRpcTutorial](https://github.com/Mauxilium/ArduinoPythonSerialRpcTutorial) - A tutorial to discover a more complex use of library
+* [www.mauxilium.it](http://www.mauxilium.it) - The reference site for my open source projects
